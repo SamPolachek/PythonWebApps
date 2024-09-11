@@ -9,7 +9,7 @@
             "type": "python",
             "request": "launch",
             "program": "manage.py",
-            "cwd": "${workspaceFolder}/14/SoftwarePlanner",
+            "cwd": "${workspaceFolder}/Superhero",
             "args": [
                 "runserver",
                 "8002"
