@@ -1,6 +1,8 @@
 from django.urls import path
 from photos.views import PhotoView
+from photos.views import PhotoListView
 
 urlpatterns = [
-    path('chapter-1.jpg', PhotoView.as_view()),
+    path('<str:name>', PhotoView.as_view()),
+    path('', PhotoListView.as_view()),
 ]
