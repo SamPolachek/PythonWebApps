@@ -1,6 +1,5 @@
 <h1>My Superhero Page</h1>
-<ul>
-    <li><a href="hulk">Hulk</a></li>
-    <li><a href="blackwidow">Black Widow</a></li>
-    <li><a href="ironman">Iron Man</a></li>
-</ul>
+<p> <a href="{{ hero.pk }}" target="_new"> {{ hero.name }} </a> </p>
+<p> {{ hero.identity }} </p>
+<p> {{ hero.description }} </p>
+<p> {{ hero.image }} </p>
