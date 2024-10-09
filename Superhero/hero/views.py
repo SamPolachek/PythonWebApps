@@ -59,5 +59,5 @@ class UserHomeView(RedirectView):
             return '/article/'
         return f'/author/{get_me(self.request.user).pk}'
 
-def get_me(user):
-    return Author.objects.get_or_create(user=user)[0]
+    def get_me(user):
+        return Author.objects.get_or_create(user=user)[0]
