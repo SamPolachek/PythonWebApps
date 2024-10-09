@@ -10,14 +10,6 @@ Add New Hero
 <div class="container m-5">
 
     {% load crispy_forms_tags %}
-
-    <form method="post">
-        {% csrf_token %}
-    
-        {{ form }}
-    
-        <button type="submit">Sign Up</button>
-    </form>
     
     <form action="" method="post">{% csrf_token %}
 

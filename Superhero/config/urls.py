@@ -1,5 +1,5 @@
 from django.urls import path, include
-from hero.views import HeroCreateView, HeroDeleteView, HeroDetailView, HeroListView, HeroUpdateView
+from hero.views import HeroCreateView, HeroDeleteView, HeroDetailView, HeroListView, HeroUpdateView, SignUpView
 from django.contrib import admin
 
 urlpatterns = [
@@ -17,5 +17,9 @@ urlpatterns = [
     # Admin views for users
     path('admin/', admin.site.urls),
     # path('admin/', include('admin.site.urls')),   Don't do this!
+
+    # User Accounts
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/signup/', SignUpView.as_view(), name='signup'),
 
 ]

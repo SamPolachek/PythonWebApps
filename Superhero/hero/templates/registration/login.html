@@ -1,0 +1,26 @@
+{% extends 'theme.html' %}
+
+{% block title %}
+Login
+{% endblock title %}
+
+
+{% block content %}
+
+<div class="container m-5">
+    <form method="post">
+        {% csrf_token %}
+    
+        {{ form }}
+    
+        <button type="submit">Log In</button>
+    </form>
+</div>
+
+{% if user.is_authenticated %}
+    <p>Welcome, {{ user.username }}. Thanks for logging in.</p>
+{% else %}
+    <p>Welcome, new user. Please log in.</p>
+{% endif %}
+
+{% endblock content %}

@@ -1,0 +1,20 @@
+{% extends 'theme.html' %}
+
+{% block title %}
+Sign Up
+{% endblock title %}
+
+
+{% block content %}
+
+<div class="container m-5">
+    <form method="post">
+        {% csrf_token %}
+    
+        {{ form }}
+    
+        <button type="submit">Sign Up</button>
+    </form>
+</div>
+
+{% endblock content %}
