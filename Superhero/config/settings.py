@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from os import environ, getenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,9 +24,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-6)e_3=ki-o#j6vee4o)duk)r#6*4+hb=o89-tn86b+s6jy!cgr'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.ondigitalocean.app']
+DEBUG = getenv("DEBUG") == "1"
+DISABLE_COLLECTSTATIC = 1
+DJANGO_ALLOWED_HOST = '.ondigitalocean.app'
+ALLOWED_HOSTS = getenv("DJANGO_ALLOWED_HOST", "127.0.0.1", "localhost")
 
 
 # Application definition
@@ -76,8 +78,8 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': environ.get('DATABASE_ENGINE'),
+        'NAME': environ.get('DATABASE_NAME'),
     }
 }
 
@@ -118,6 +120,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = 'static_assets/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -127,3 +130,29 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = 'accounts/login'
 
 LOGOUT_REDIRECT_URL = 'accounts/logout'
+
+POSTGRES_DB = environ.get("POSTGRES_DB")  # database name
+POSTGRES_PASSWORD = environ.get("POSTGRES_PASSWORD")  # database user password
+POSTGRES_USER = environ.get("POSTGRES_USER")  # database username
+POSTGRES_HOST = environ.get("POSTGRES_HOST")  # database host
+POSTGRES_PORT = environ.get("POSTGRES_PORT")  # database port
+
+POSTGRES_READY = (
+    POSTGRES_DB is not None
+    and POSTGRES_PASSWORD is not None
+    and POSTGRES_USER is not None
+    and POSTGRES_HOST is not None
+    and POSTGRES_PORT is not None
+)
+
+if POSTGRES_READY:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": POSTGRES_DB,
+            "USER": POSTGRES_USER,
+            "PASSWORD": POSTGRES_PASSWORD,
+            "HOST": POSTGRES_HOST,
+            "PORT": POSTGRES_PORT,
+        }
+    }
