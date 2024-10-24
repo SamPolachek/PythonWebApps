@@ -40,7 +40,7 @@ class ArticleCreateView(LoginRequiredMixin, CreateView):
     fields = '__all__'
 
     def form_valid(self, form):
-        form.instance.author = self.request.user
+        form.instance.hero = self.request.user
         return super().form_valid(form)
     
 class ArticleUpdateView(LoginRequiredMixin, UpdateView):
@@ -57,7 +57,28 @@ class UserHomeView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         if self.request.user.is_anonymous:
             return '/article/'
-        return f'/author/{get_me(self.request.user).pk}'
+        return f'/hero/{get_me(self.request.user).pk}'
 
     def get_me(user):
-        return Author.objects.get_or_create(user=user)[0]
+        return author.objects.get_or_create(user=user)[0]
+    
+class ArticleListView(ListView):
+    template_name = "article/list.html"
+    model = Article
+    context_object_name = "articles"
+
+class ArticleDetailView(DetailView):
+    template_name = "article/detail.html"
+    model = Article
+    context_object_name = "article"
+
+class ArticleUpdateView(UpdateView):
+    template_name = "article/edit.html"
+    model = Article
+    fields = "__all__"
+
+
+class ArticleDeleteView(DeleteView):
+    model = Article
+    template_name = "article/delete.html"
+    success_url = reverse_lazy("article_list")
