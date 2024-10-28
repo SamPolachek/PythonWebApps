@@ -1,0 +1,33 @@
+<ul class="nav nav-tabs" role="tablist">
+
+    {% for t in tabs %}
+        <li class="nav-item">
+            <a class="nav-link {{ t.active }}" 
+                id="{{ t.name }}-tab" 
+                data-bs-toggle="tab" 
+                href="#{{ t.name }}">
+                {{ t.header }}
+            </a>
+        </li>
+    {% endfor %}
+
+</ul>
+
+<div class="tab-content">
+
+    {% for t in tabs %}
+
+        <div class="tab-pane {{ t.active }} {{ t.show }} fade" 
+            id="{{ t.name }}">
+
+            <h2>{{ t.header }}</h2>
+
+            {% autoescape off %}
+            {{ t.body }}
+            {% endautoescape %}
+
+        </div>
+
+    {% endfor %}
+
+</div>

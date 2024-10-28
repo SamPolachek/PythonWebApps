@@ -1,5 +1,5 @@
 from django.urls import path, include
-from hero.views import HeroCreateView, HeroDeleteView, HeroDetailView, HeroListView, HeroUpdateView, SignUpView
+from hero.views import HeroCreateView, HeroDeleteView, HeroDetailView, HeroListView, HeroUpdateView, SignUpView, DocumentView, PageView
 from django.contrib import admin
 
 urlpatterns = [
@@ -22,4 +22,6 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/signup/', SignUpView.as_view(), name='signup'),
 
+    path('doc/<str:doc>', DocumentView.as_view()),
+    path('<str:page>.html', PageView.as_view()),
 ]
