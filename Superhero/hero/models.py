@@ -16,9 +16,25 @@ class Superhero(models.Model):
     def get_absolute_url(self):
         return reverse_lazy('hero_list')
     
+    @staticmethod
+    def get_me(user):
+        return Superhero.objects.get_or_create(user=user)[0]
+    
 class Article (models.Model):
 
     author = models.ForeignKey(User, on_delete=models.CASCADE, editable=False)
     hero = models.ForeignKey(Superhero, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     body = models.TextField()
+
+def get_upload(instance, filename):
+    return f'images/{filename}'
+
+class Photo (models.Model):
+
+    author = models.ForeignKey(Superhero, on_delete=models.CASCADE, editable=False)
+    title = models.CharField(max_length=100)
+    image = models.ImageField(null=True, blank=True, upload_to=get_upload)
+
+    def get_absolute_url(self):
+        return reverse_lazy('photo_detail', args=[str(self.id)])

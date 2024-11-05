@@ -9,5 +9,9 @@
     <p>{{ text }}</p>
     {% endautoescape %}
 
+    {% autoescape off %}
+        {{ html }}
+    {% endautoescape %}
+
 </div>
 {% endblock content %}

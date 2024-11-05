@@ -5,6 +5,7 @@ from django.views.generic import CreateView, DeleteView, DetailView, ListView, U
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
 from csv import reader
+from django.test import TestCase
 
 from .models import Superhero
 from .models import Article
@@ -42,7 +43,7 @@ class ArticleCreateView(LoginRequiredMixin, CreateView):
     fields = '__all__'
 
     def form_valid(self, form):
-        form.instance.hero = self.request.user
+        form.instance.hero = Superhero.get_me(self.request.user)
         return super().form_valid(form)
     
 class ArticleUpdateView(LoginRequiredMixin, UpdateView):
@@ -171,3 +172,49 @@ class SuperView(TemplateView):
 
     def get_context_data(self, **kwargs):
         return dict(table=create_table())
+    
+def user_args():
+    return dict(username='TESTER', email='test@test.us', password='secret')
+
+def test_user():
+    return Superhero.get_user_model().objects.create_user(**user_args())
+
+class DataTest(TestCase):
+    def setUp(self):
+        self.user = test_user()
+        self.hero = Superhero.objects.create(user=self.user, bio='single tester')
+        self.photo1 = dict(hero=self.hero, title='title 1', image="photo1.png")
+        self.photo2 = dict(hero=self.hero, title='title 2', image="photo2.png")
+
+class ViewsTest(TestCase):
+    def login(self):
+        username = self.user.username
+        password = user_args()['password']
+        response = self.client.login(username=username, password=password)
+        self.assertEqual(response, True)
+
+    def setUp(self):
+        self.user = test_user()
+        self.hero = Superhero.objects.create(user=self.user, bio='single tester')
+        self.photo1 = dict(hero=self.hero, title='title 1', image="photo1.png")
+        self.photo2 = dict(hero=self.hero, title='title 2', image="photo2.png")
+
+class PhotoCarouselView(TemplateView):
+    template_name = 'photo/carousel.html'
+
+    def get_context_data(self, **kwargs):
+        photos = Superhero.get_me(self.request.user).photos
+        return dict(title='Carousel View', carousel=carousel_data(photos))
+
+
+    def carousel_data(photos):
+        return [photo_data(id, photo) for id, photo in enumerate(photos)]
+
+
+    def photo_data(id, photo):
+        x = dict(image_url=f"/media/{photo.image}", 
+                 id=str(id), 
+                 label=f"Photo {photo.image} {id}")
+        if id == 0:
+            x.update(active="active", aria='aria-current="true"')
+        return x

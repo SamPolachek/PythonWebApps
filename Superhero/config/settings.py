@@ -156,3 +156,6 @@ if POSTGRES_READY:
             "PORT": POSTGRES_PORT,
         }
     }
+
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / "media"
