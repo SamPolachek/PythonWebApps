@@ -4,8 +4,9 @@ from django.views.generic import TemplateView
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView, RedirectView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
-from csv import reader
+from csv import reader, writer
 from django.test import TestCase
+from markdown import markdown
 
 from .models import Superhero
 from .models import Article
@@ -202,15 +203,6 @@ class ViewsTest(TestCase):
 class PhotoCarouselView(TemplateView):
     template_name = 'photo/carousel.html'
 
-    def get_context_data(self, **kwargs):
-        photos = Superhero.get_me(self.request.user).photos
-        return dict(title='Carousel View', carousel=carousel_data(photos))
-
-
-    def carousel_data(photos):
-        return [photo_data(id, photo) for id, photo in enumerate(photos)]
-
-
     def photo_data(id, photo):
         x = dict(image_url=f"/media/{photo.image}", 
                  id=str(id), 
@@ -218,3 +210,40 @@ class PhotoCarouselView(TemplateView):
         if id == 0:
             x.update(active="active", aria='aria-current="true"')
         return x
+    
+    def carousel_data(photos):
+        return [photo_data(id, photo) for id, photo in enumerate(photos)]
+
+    def get_context_data(self, **kwargs):
+        photos = Superhero.get_me(self.request.user).photos
+        return dict(title='Carousel View', carousel=carousel_data(photos))
+    
+def read_table(path):
+    with open(path) as f:
+        return [row for row in reader(f)]
+    
+def write_table(path, table):
+    with open(path, 'w', newline='') as f:
+        writer(f).writerows(table)
+
+def print_table(table):
+    for row in table:
+        print(row[0], row[1], row[2])
+
+class TableView(TemplateView):
+    template_name = 'table.html'
+
+    def get_context_data(self, **kwargs):
+        path = 'numbers.csv'
+        return {'table': read_table(path)}
+    
+def doc_data(document):
+    path = Path(document)
+    markdown_text = path.read_text()
+    return {'html': markdown(markdown_text)}
+
+class DocumentView(TemplateView):
+    template_name = 'document.html'
+
+    def get_context_data(self, **kwargs):
+        return doc_data(self.kwargs.get('doc'))
