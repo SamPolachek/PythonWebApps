@@ -5,5 +5,8 @@
         "editor.formatOnSave": true,
         "editor.tabSize": 4,
         "editor.insertSpaces": true
-    }
+    },
+    "python.analysis.extraPaths": [
+        "./ClassroomDemos/12/StaticSite"
+    ]
 }

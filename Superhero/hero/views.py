@@ -8,7 +8,7 @@ from csv import reader, writer
 from django.test import TestCase
 from markdown import markdown
 
-from .models import Superhero
+from .models import Photo, Superhero
 from .models import Article
 
 class HeroListView(ListView):
@@ -247,3 +247,8 @@ class DocumentView(TemplateView):
 
     def get_context_data(self, **kwargs):
         return doc_data(self.kwargs.get('doc'))
+    
+class PhotoCreateView(LoginRequiredMixin, CreateView):
+    template_name = "photo/add.html"
+    model = Photo
+    fields = '__all__'

@@ -1,4 +1,5 @@
 from django.urls import path, include
+from config import settings
 from hero.views import HeroCreateView, HeroDeleteView, HeroDetailView, HeroListView, HeroUpdateView, SignUpView, DocumentView, PageView
 from django.contrib import admin
 
@@ -25,4 +26,4 @@ urlpatterns = [
     path('doc/<str:doc>', DocumentView.as_view()),
     path('<str:page>.html', PageView.as_view()),
     path('<str:doc>.md', DocumentView.as_view()),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
