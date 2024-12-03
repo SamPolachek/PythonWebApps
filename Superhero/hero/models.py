@@ -73,3 +73,7 @@ if path.exists():
     objects = loads(path.read_text())
 for o in objects:
     Book.objects.get_or_create(**o)
+
+class Message(models.Model):
+    title = models.CharField(max_length=100)
+    text = models.TextField()
